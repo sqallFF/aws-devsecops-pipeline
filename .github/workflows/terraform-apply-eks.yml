@@ -1,5 +1,4 @@
 name: "Terraform Apply"
-
 on:
   workflow_call:
 
@@ -25,6 +24,8 @@ jobs:
         with:
           workspace: ${{ env.TF_WORKSPACE }}
           directory: ${{ env.CONFIG_DIRECTORY }}
+          organization: ${{ env.TF_CLOUD_ORGANIZATION }}    # ADD THIS
+          token: ${{ secrets.TF_API_TOKEN }}                 # ADD THIS
 
       - name: Create Apply Run
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.1
@@ -32,6 +33,8 @@ jobs:
         with:
           workspace: ${{ env.TF_WORKSPACE }}
           configuration_version: ${{ steps.apply-upload.outputs.configuration_version_id }}
+          organization: ${{ env.TF_CLOUD_ORGANIZATION }}    # ADD THIS
+          token: ${{ secrets.TF_API_TOKEN }}                 # ADD THIS
 
       - name: Apply
         uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.3.1
@@ -40,3 +43,5 @@ jobs:
         with:
           run: ${{ steps.apply-run.outputs.run_id }}
           comment: "Apply Run from GitHub Actions CI ${{ github.sha }}"
+          organization: ${{ env.TF_CLOUD_ORGANIZATION }}    # ADD THIS
+          token: ${{ secrets.TF_API_TOKEN }}                 # ADD THIS
